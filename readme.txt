@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.7
 
-Stable Tag: 1.0
+Stable Tag: 1.0.0.1
 License: GNU Version 2 or Any Later Version
 
 Export payment history by location and date. Useful for tax logs.
@@ -45,6 +45,9 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 1. Export CSV By Date and Location
 
 == Changelog ==
+
+= 1.0.0.1: December 4, 2013 =
+* Fixed double including of export form file
 
 = 1.0.0: December 4, 2013 =
 
