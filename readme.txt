@@ -46,6 +46,9 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 
 == Changelog ==
 
+= 1.0.0.2: December 4, 2013 =
+* Fixed user address matching 
+
 = 1.0.0.1: December 4, 2013 =
 * Fixed double including of export form file
 
