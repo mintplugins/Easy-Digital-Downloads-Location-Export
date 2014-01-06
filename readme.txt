@@ -46,6 +46,9 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 
 == Changelog ==
 
+= 1.0.0.3: January 6, 2013 =
+* Included searching by country for dates prior to EDD changes in August 2013
+
 = 1.0.0.2: December 4, 2013 =
 * Fixed user address matching 
 
