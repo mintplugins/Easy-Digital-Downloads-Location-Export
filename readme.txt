@@ -5,9 +5,9 @@ Contributors: johnstonphilip, moveplugins, mordauk
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins. moveplugins, reports, add-on
 Requires at least: 3.3
-Tested up to: 3.7
+Tested up to: 3.8.3
 
-Stable Tag: 1.0.0.1
+Stable Tag: 1.0.0.4
 License: GNU Version 2 or Any Later Version
 
 Export payment history by location and date. Useful for tax logs.
@@ -46,7 +46,10 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 
 == Changelog ==
 
-= 1.0.0.3: January 6, 2013 =
+= 1.0.0.4: April 15, 2014 =
+* Fixed bug if filtering just by country and NOT state.
+
+= 1.0.0.3: January 6, 2014 =
 * Included searching by country for dates prior to EDD changes in August 2013
 
 = 1.0.0.2: December 4, 2013 =

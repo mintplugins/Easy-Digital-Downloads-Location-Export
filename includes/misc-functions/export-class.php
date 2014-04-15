@@ -121,7 +121,7 @@ class EDD_Payments_By_Location_Export extends EDD_Export {
 			if ( $user_info['address']['country'] == $selected_country || $payment_meta['country'] == $selected_country || $selected_country == 'all' ){
 								
 				//If the state matches the selection or is 'all'
-				if ( $user_info['address']['state'] == $selected_state || $payment_meta['state'] || $selected_state == '0' ){
+				if ( $user_info['address']['state'] == $selected_state || $payment_meta['state'] || $selected_state == 'all' ){
 				
 					if ( $downloads ) {
 						foreach ( $downloads as $key => $download ) {
