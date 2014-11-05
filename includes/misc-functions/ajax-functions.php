@@ -15,6 +15,7 @@ function edd_location_export_ajax_get_states_field() {
 
 		$args = array(
 			'name'    => $_POST['field_name'],
+			'id'    => $_POST['field_name'],
 			'options' => edd_get_shop_states( $_POST['country'] ),
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd-location-export' ),
 			'show_option_none' => false

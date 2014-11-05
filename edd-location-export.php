@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: Easy Digital Downloads - Location Export
-Plugin URI: http://moveplugins.com/edd-location-export
+Plugin URI: http://mintplugins.com/edd-location-export
 Description: Export payment history by date and location. Useful for tax logs.
-Version: 1.0.0.4
-Author: Move Plugins
-Author URI: http://moveplugins.com
+Version: 1.0.0.8
+Author: Mint Plugins
+Author URI: http://mintplugins.com
 License: GPLv2 or later
-Contributors: johnstonphilip, moveplugins, mordauk
+Contributors: johnstonphilip, mintplugins, mordauk
 */
 
 // Exit if accessed directly

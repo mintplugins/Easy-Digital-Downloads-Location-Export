@@ -15,7 +15,7 @@ function edd_location_export_form(){
 			<p>
 				<form method="post">
 					<?php echo EDD()->html->year_dropdown(); ?>
-					<?php echo EDD()->html->month_dropdown(); ?>
+					<?php echo edd_location_export_month_dropdown(); ?>
 					
 					<select name="edd_export_payment_status">
 						<option value="0"><?php _e( 'All Statuses', 'edd-location-export' ); ?></option>

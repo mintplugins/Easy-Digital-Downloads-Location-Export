@@ -94,17 +94,34 @@ class EDD_Payments_By_Location_Export extends EDD_Export {
 		global $wpdb, $edd_options;
 
 		$data = array();
-
-		$payments = edd_get_payments( array(
-			'offset' => 0,
-			'number' => -1,
-			'mode'   => edd_is_test_mode() ? 'test' : 'live',
-			'status' => isset( $_POST['edd_export_payment_status'] ) ? $_POST['edd_export_payment_status'] : 'any',
-			'month'  => isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' ),
-			'year'   => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' )
-		) );
 		
-		$selected_country =  isset( $_POST['edd_export_payment_country'] ) ? $_POST['edd_export_payment_country'] : 'all';
+		if ( $_POST['month'] == 'all' ){
+			
+			$payments = edd_get_payments( array(
+				'offset' => 0,
+				'number' => -1,
+				'mode'   => edd_is_test_mode() ? 'test' : 'live',
+				'status' => isset( $_POST['edd_export_payment_status'] ) ? $_POST['edd_export_payment_status'] : 'any',
+				'year'   => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' )
+			) );
+			
+		}
+		else{
+			$payments = edd_get_payments( array(
+				'offset' => 0,
+				'number' => -1,
+				'mode'   => edd_is_test_mode() ? 'test' : 'live',
+				'status' => isset( $_POST['edd_export_payment_status'] ) ? $_POST['edd_export_payment_status'] : 'any',
+				'month'  => isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' ),
+				'year'   => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' )
+			) );
+		}
+		
+		//Set defaults for totals
+		$overall_total = 0;
+		$total_tax = 0;
+		
+		$selected_country =  isset( $_POST['edd_export_payment_country'] ) ? $_POST['edd_export_payment_country'] : '0';
 		$selected_state = isset( $_POST['card_state'] ) ? $_POST['card_state'] : '0';
 					
 		foreach ( $payments as $payment ) {
@@ -116,12 +133,11 @@ class EDD_Payments_By_Location_Export extends EDD_Export {
 			$products       = '';
 			$skus			= '';
 			
-			
 			//If our country matches
-			if ( $user_info['address']['country'] == $selected_country || $payment_meta['country'] == $selected_country || $selected_country == 'all' ){
+			if ( ( isset( $user_info['address']['country'] ) && $user_info['address']['country'] == $selected_country ) || ( isset( $payment_meta['country'] ) && $payment_meta['country'] == $selected_country ) || $selected_country == '0' || $selected_country == 'all' ){
 								
 				//If the state matches the selection or is 'all'
-				if ( $user_info['address']['state'] == $selected_state || $payment_meta['state'] || $selected_state == 'all' ){
+				if ( ( isset( $user_info['address']['state'] ) && $user_info['address']['state'] == $selected_state ) || ( isset( $payment_meta['state'] ) && $payment_meta['state'] == $selected_state ) || $selected_state == '0' || $selected_state == 'all' ){
 				
 					if ( $downloads ) {
 						foreach ( $downloads as $key => $download ) {
@@ -168,7 +184,42 @@ class EDD_Payments_By_Location_Export extends EDD_Export {
 					} else {
 						$user = false;
 					}
-		
+					
+					//Set up country
+					if ( isset( $user_info['address']['country'] ) ){
+						$country = $user_info['address']['country'];
+					}
+					else if( isset( $payment_meta['country'] ) ){
+						$country = $payment_meta['country'];
+					}
+					else{
+						$country = NULL;	
+					}
+					//Set up state
+					if ( isset( $user_info['address']['state'] ) ){
+						$state = $user_info['address']['state'];
+					}
+					else if( isset( $payment_meta['state'] ) ){
+						$state = $payment_meta['state'];
+					}
+					else{
+						$state = NULL;	
+					}
+					//Set up city
+					if ( isset( $user_info['address']['city'] ) ){
+						$city = $user_info['address']['city'];
+					}
+					else if( isset( $payment_meta['city'] ) ){
+						$city = $payment_meta['city'];
+					}
+					else{
+						$city = NULL;	
+					}
+					
+					//Totals:
+					$overall_total = $overall_total + html_entity_decode( edd_format_amount( $total ) );
+					$total_tax = $total_tax + html_entity_decode( edd_get_payment_tax( $payment->ID, $payment_meta ) );
+							
 					$data[] = array(
 						'id'       => $payment->ID,
 						'email'    => $payment_meta['email'],
@@ -184,9 +235,9 @@ class EDD_Payments_By_Location_Export extends EDD_Export {
 						'date'     => $payment->post_date,
 						'user'     => $user ? $user->display_name : __( 'guest', 'edd-location-export' ),
 						'status'   => edd_get_payment_status( $payment, true ),
-						'country'  => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : $payment_meta['country'],
-						'state'    => isset( $user_info['address']['state'] ) ? $user_info['address']['state'] : $payment_meta['state'],
-						'city '    => isset( $user_info['address']['city'] ) ? $user_info['address']['city'] : $payment_meta['city'],
+						'country'  => $country,
+						'state'    => $state,
+						'city '    => $city,
 					);
 		
 					if( !edd_use_skus() )
@@ -194,6 +245,30 @@ class EDD_Payments_By_Location_Export extends EDD_Export {
 				}
 			}
 		}
+		
+		//Add a row at the bottom for the total		
+		$data[] = array(
+			'id'       => __( 'Totals:', 'edd_location_export' ),
+			'email'    => NULL,
+			'first'    => NULL,
+			'last'     => NULL,
+			'products' => NULL,
+			'skus'     => NULL,
+			'amount'   => $overall_total,
+			'tax'      => $total_tax,
+			'discount' => NULL,
+			'gateway'  => NULL,
+			'key'      => NULL,
+			'date'     => NULL,
+			'user'     => NULL,
+			'status'   => NULL,
+			'country'  => NULL,
+			'state'    => NULL,
+			'city '    => NULL,
+		);
+
+		if( !edd_use_skus() )
+			unset( $data['skus'] );
 
 		$data = apply_filters( 'edd_export_get_data', $data );
 		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
